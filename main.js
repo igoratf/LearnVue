@@ -32,11 +32,11 @@ Vue.component('product', {
         <button v-on:click="addToCart"
                 :disabled="!inStock"
                 :class="{ outOfStock: !inStock }">Add to Cart</button>
-        <button @click="removeFromCart">Remove from Cart</button>
+        <button @click="removeFromCart"
+                :disabled="!inStock"
+                :class="{ outOfStock: !inStock }">Remove from Cart</button>
     
-        <div class="cart">
-            <p>Cart({{cart}})</p>
-        </div>
+
     </div>
 
     
@@ -54,31 +54,27 @@ Vue.component('product', {
                 {
                     variantId: 2234,
                     variantColor: 'green',
-                    variantImage: './assets/green-socks.png',
+                    variantImage: './assets/greensocks.jpg',
                     variantQuantity: 2,
                     onSale: true
                 },
                 {
                     variantId: 2235,
                     variantColor: 'blue',
-                    variantImage: './assets/blue-socks.png',
+                    variantImage: './assets/bluesocks.jpg',
                     variantQuantity: 0,
                     onSale: false
                 }
             ],
-            cart: 0,
-            onSale: true
         }
     }
         ,
         methods: {
             addToCart() {
-                this.cart += 1
+                this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
             },
             removeFromCart() {
-                if (this.cart > 0) {
-                    this.cart -= 1
-                }
+                this.$emit('remove-from-cart')
                 
             },
             updateProduct(index) {
@@ -129,6 +125,20 @@ Vue.component('product-details', {
 var app = new Vue({
     el: '#app',
     data: {
-        premium: true
+        premium: true,
+        cart: [],
+        onSale: true
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id);
+        },
+        removeFromCart() {
+            if (this.cart.length > 0) {
+                this.cart.pop();
+            } else {
+                alert('Cart is empty');
+            }
+        }
     }
 })
