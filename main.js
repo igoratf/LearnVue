@@ -3,6 +3,10 @@ Vue.component('product', {
         premium: {
             type: Boolean,
             required: true
+        },
+        cart: {
+            type: Array,
+            required: true
         }
     },
     template: `
@@ -33,8 +37,8 @@ Vue.component('product', {
                 :disabled="!inStock"
                 :class="{ outOfStock: !inStock }">Add to Cart</button>
         <button @click="removeFromCart"
-                :disabled="!inStock"
-                :class="{ outOfStock: !inStock }">Remove from Cart</button>
+                :disabled="!inStock || cart.length == 0"
+                :class="{ outOfStock: !inStock || cart.length == 0 }">Remove from Cart</button>
 
         <div>
             <h2>Reviews</h2>
@@ -114,9 +118,9 @@ Vue.component('product', {
             shipping () {
                 if (this.premium) {
                     return 'Free'
-            }
+                }
                     return 2.99
-        }
+            },
         }
 })
 
